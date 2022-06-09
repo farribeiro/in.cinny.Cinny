@@ -23,23 +23,17 @@ modules:
 
   - name: Cinny
     buildsystem: simple
+    build-options:
+      append-path: /usr/lib/sdk/node16/bin:/usr/lib/sdk/rust-nightly/bin
+      build-args:
+        - --share=network
+      env: 
+        - CARGO_HOME: "/run/build/rust-flatpak/cargo"
+    buildsystem: simple
     build-commands:
-      - ar x cinny_*.deb
-      - rm -f cinny_*.deb
-      - tar xf data.tar.gz
-      - rm -f control.tar.gz data.tar.xz debian-binary
-      - install -Dm644 resources/in.cinny.Cinny.appdata.xml /app/share/metainfo/in.cinny.Cinny.metainfo.xml
-      - cp -r usr/bin/cinny /app/bin
-      - mkdir -p /app/share/icons/hicolor
-      - cp -r usr/share/icons/hicolor/* /app/share/icons/hicolor
-      - rm -rf /app/share/icons/hicolor/512x512@2x
-      - install -Dm744 usr/share/applications/cinny.desktop /app/share/applications/in.cinny.Cinny.desktop
+      - npm install
+      - npm run tauri build
     sources:
-      - url: https://github.com/cinnyapp/cinny-desktop/releases/download/v2.0.4/cinny_2.0.4_amd64.deb
-        sha256: b9d8cb958653a8e05317d1fb37ac099c8a26140790bc0733984a778a61362066
-        type: file
-        only-arches:
-          - x86_64
       - url: https://github.com/cinnyapp/cinny-desktop.git
         commit: 1211b0ea698111006afb04b36a5a0111a856e111
         type: git
